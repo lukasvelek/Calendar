@@ -39,29 +39,6 @@ class Database {
     }
 
     /**
-     * Creates an event entry using the data provided
-     * 
-     * It actually just creates an SQL query string and using the query() function returns the result of the data insertion
-     */
-    function create_entry($title, $date, $description, $location, $color) {
-        $sql = "INSERT INTO `calendar_entries` (`date`, `title`, `description`,
-                                                `location`, `color`)
-                VALUES ('$date', '$title', '$description', '$location', '$color')";
-
-        return $this->query($sql);
-    }
-
-    /**
-     * Returns all entries (as mysqli_query type) for the entered date
-     */
-    function get_date_entries($date) {
-        $sql = "SELECT * FROM `calendar_entries`
-                WHERE `date` LIKE '$date'";
-
-        return $this->query($sql);
-    }
-
-    /**
      * Returns the result of the query
      */
     function query($sql) {
@@ -74,6 +51,54 @@ class Database {
     function get_num_rows($sql) {
         $q = $this->conn->query($sql);
         return $q->num_rows;
+    }
+
+    function get_data($table, $id) {
+        if($id == "*") {
+            $sql = "SELECT * FROM `$table`";
+        } else {
+            $sql = "SELECT * FROM `$table`
+                    WHERE `id` LIKE '$id'";
+        }
+
+        return $this->query($sql);
+    }
+
+    function get_data_count($table, $id) {
+        $sql = "SELECT * FROM `$table`
+                WHERE `id` LIKE '$id'";
+
+        return $this->get_num_rows($sql);
+    }
+
+    function check_user($username, $password) {
+        $sql = "SELECT `token` FROM `api_tokens`
+                WHERE `username` LIKE '$username'
+                AND `password` LIKE '$password'";
+
+        if($this->get_num_rows($sql) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function check_token($token) {
+        $sql = "SELECT * FROM `api_tokens`
+                WHERE `token` LIKE '$token'";
+
+        if($this->get_num_rows($sql) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function save_token($token, $username, $password) {
+        $sql = "INSERT INTO `api_tokens` (`token`, `username`, `password`)
+                VALUES ('$token', '$username', '$password')";
+
+        return $this->query($sql);
     }
 }
 
