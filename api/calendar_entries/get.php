@@ -1,6 +1,6 @@
 <?php
 
-require_once('../Database.php');
+require_once('../../Database.php');
 
 $db = new Database();
 
@@ -23,9 +23,9 @@ foreach($data as $d) {
         {
             "id": "' . $id . '",
             "date": "' . $date . '",
-            "title": "' . $title . '"
-            "description": "' . $description . '"
-            "location": "' . $location . '"
+            "title": "' . $title . '",
+            "description": "' . $description . '",
+            "location": "' . $location . '",
             "color": "' . $color . '"
         }
     ';

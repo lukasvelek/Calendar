@@ -2,9 +2,11 @@
 
 require_once('Database.php');
 require_once('Calendar.php');
+require_once('Utils.php');
 
 $db = new Database();
 $cal = new Calendar($db);
+$utils = new Utils();
 
 ?>
 <!DOCTYPE html>
@@ -26,9 +28,9 @@ $cal = new Calendar($db);
                     $m = 0;
                     $y = 0;
 
-                    if(isset($_GET['m']) && isset($_GET['y'])) {
-                        $m = htmlspecialchars($_GET['m']);
-                        $y = htmlspecialchars($_GET['y']);
+                    if(isset($utils->get("m")) && isset($utils->get("y"))) {
+                        $m = $utils->get("m");
+                        $y = $utils->get("y");
                     } else {
                         $m = date('m');
                         $y = date('Y');

@@ -1,23 +1,21 @@
 <?php
 
 require_once('Database.php');
+require_once('Utils.php');
 
 $db = new Database();
+$utils = new Utils();
 
-$title = post('title');
-$date = post('date');
-$description = post('description');
-$location = post('location');
-$color = post('color');
+$title = $utils->post('title');
+$date = $utils->post('date');
+$description = $utils->post('description');
+$location = $utils->post('location');
+$color = $utils->post('color');
 
 if($db->create_entry($title, $date, $description, $location, $color) === TRUE) {
     header('Location: index.php');
 } else {
     die('error');
-}
-
-function post($n) {
-    return htmlspecialchars($_POST[$n]);
 }
 
 ?>

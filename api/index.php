@@ -1,13 +1,15 @@
 <?php
 
-require_once('Database.php');
+require_once('../Database.php');
+require_once('../Utils.php');
 
 $db = new Database();
+$utils = new Utils();
 
 $token = "";
 
-if(isset($_GET['token'])) {
-    $token = htmlspecialchars($_GET['token']);
+if(isset($utils->get("token"))) {
+    $token = $utils->get("token");
 } else {
     die('YOU MUST ENTER TOKEN! <a href="register-token-form.php">Register token</a>');
 }
@@ -16,20 +18,20 @@ if(!$db->check_token($token)) {
     die('YOUR TOKEN IS NOT REGISTERED! <a href="register-token-form.php">Register token</a>');
 }
 
-if(isset($_GET['o'])) {
-    $operation = htmlspecialchars($_GET['o']);
+if(isset($utils->get("o"))) {
+    $operation = $utils->get("o");
 
     $table = "";
     $id = "";
 
-    if(isset($_GET['table'])) {
-        $table = htmlspecialchars($_GET['table']);
+    if(isset($utils->get("table")) {
+        $table = $utils->get("table");
     } else {
         die('NO TABLE PROVIDED!');
     }
 
-    if(isset($_GET['id'])) {
-        $id = htmlspecialchars($_GET['id']);
+    if(isset($utils->get("id")) {
+        $id = $utils->get("id");
     } else {
         $id = "*";
     }

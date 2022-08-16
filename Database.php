@@ -75,6 +75,69 @@ class Database {
         $q = $this->conn->query($sql);
         return $q->num_rows;
     }
+
+    /**
+     * Returns data from table with id equal to id in arguments
+     */
+    function get_data($table, $id) {
+        if($id == "*") {
+            $sql = "SELECT * FROM `$table`";
+        } else {
+            $sql = "SELECT * FROM `$table`
+                    WHERE `id` LIKE '$id'";
+        }
+
+        return $this->query($sql);
+    }
+
+    /**
+     * Returns number of entries in the selected table with id equal to id in arguments
+     */
+    function get_data_count($table, $id) {
+        $sql = "SELECT * FROM `$table`
+                WHERE `id` LIKE '$id'";
+
+        return $this->get_num_rows($sql);
+    }
+
+    /**
+     * Checks if user has already registerd a token or not
+     */
+    function check_user($username, $password) {
+        $sql = "SELECT `token` FROM `api_tokens`
+                WHERE `username` LIKE '$username'
+                AND `password` LIKE '$password'";
+
+        if($this->get_num_rows($sql) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if token exists in table or not
+     */
+    function check_token($token) {
+        $sql = "SELECT * FROM `api_tokens`
+                WHERE `token` LIKE '$token'";
+
+        if($this->get_num_rows($sql) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Saves token to the table
+     */
+    function save_token($token, $username, $password) {
+        $sql = "INSERT INTO `api_tokens` (`token`, `username`, `password`)
+                VALUES ('$token', '$username', '$password')";
+
+        return $this->query($sql);
+    }
 }
 
 ?>
