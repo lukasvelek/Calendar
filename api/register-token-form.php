@@ -6,9 +6,9 @@
     </head>
     <body>
         <form action="register-token-process.php" method="post">
-            Username:
+            <label>Username:</label>
             <input type="text" name="username" required>
-            Password:
+            <label>Password:</label>
             <input type="password" name="password" required>
             <input type="submit" value="Register">
         </form>
