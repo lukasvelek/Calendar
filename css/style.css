@@ -2,14 +2,22 @@ body {
     background-color: rgb(240, 240, 240);
 
     font-family: sans-serif;
+
+    overflow-x: hidden;
 }
 
-#form {
+#form, footer {
     background-color: white;
 
     width: 100%;
 
     margin: auto;
+}
+
+footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 }
 
 #calendar-table {

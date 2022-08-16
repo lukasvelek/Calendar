@@ -28,7 +28,7 @@ $utils = new Utils();
                     $m = 0;
                     $y = 0;
 
-                    if(isset($utils->get("m")) && isset($utils->get("y"))) {
+                    if(isset($_GET['m']) && isset($_GET['y'])) {
                         $m = $utils->get("m");
                         $y = $utils->get("y");
                     } else {
@@ -89,4 +89,8 @@ $utils = new Utils();
             </div>
         </div>
     </body>
+    <footer>
+        <p>Author: <b>Lukas Velek</b></p>
+        <p>GitHub project link: <b><a style="color: black; text-decoration: none" href="https://github.com/lukasvelek/Calendar">Calendar (GitHub)</a></b></p>
+    </footer>
 </html>

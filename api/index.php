@@ -8,7 +8,7 @@ $utils = new Utils();
 
 $token = "";
 
-if(isset($utils->get("token"))) {
+if(isset($_GET['token'])) {
     $token = $utils->get("token");
 } else {
     die('YOU MUST ENTER TOKEN! <a href="register-token-form.php">Register token</a>');
@@ -18,19 +18,19 @@ if(!$db->check_token($token)) {
     die('YOUR TOKEN IS NOT REGISTERED! <a href="register-token-form.php">Register token</a>');
 }
 
-if(isset($utils->get("o"))) {
+if(isset($_GET['o'])) {
     $operation = $utils->get("o");
 
     $table = "";
     $id = "";
 
-    if(isset($utils->get("table")) {
+    if(isset($_GET['table'])) {
         $table = $utils->get("table");
     } else {
         die('NO TABLE PROVIDED!');
     }
 
-    if(isset($utils->get("id")) {
+    if(isset($_GET['id'])) {
         $id = $utils->get("id");
     } else {
         $id = "*";
