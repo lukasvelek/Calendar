@@ -89,6 +89,7 @@ $utils = new Utils();
             </div>
         </div>
     </body>
+    <br>
     <footer>
         <p>Author: <b>Lukas Velek</b></p>
         <p>GitHub project link: <b><a style="color: black; text-decoration: none" href="https://github.com/lukasvelek/Calendar">Calendar (GitHub)</a></b></p>
