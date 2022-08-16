@@ -72,7 +72,8 @@ class Database {
      * Returns the number of rows that are available for the specified SQL string
      */
     function get_num_rows($sql) {
-        $q = $this->conn->query($sql);
+        $q = $this->query($sql);
+        
         return $q->num_rows;
     }
 
@@ -94,8 +95,12 @@ class Database {
      * Returns number of entries in the selected table with id equal to id in arguments
      */
     function get_data_count($table, $id) {
-        $sql = "SELECT * FROM `$table`
-                WHERE `id` LIKE '$id'";
+        if($id == "*") {
+            $sql = "SELECT * FROM `$table`";
+        } else {
+            $sql = "SELECT * FROM `$table`
+                    WHERE `id` LIKE '$id'";
+        }
 
         return $this->get_num_rows($sql);
     }

@@ -27,13 +27,15 @@ foreach($data as $d) {
             "description": "' . $description . '",
             "location": "' . $location . '",
             "color": "' . $color . '"
-        }
-    ';
+        }';
 
     if(($i + 1) == $count) {
         // last
+        
         echo($json);
     } else {
+        // not last
+
         echo($json . ',<br>');
     }
 
