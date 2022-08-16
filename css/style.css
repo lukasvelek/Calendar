@@ -1,0 +1,102 @@
+body {
+    background-color: rgb(240, 240, 240);
+
+    font-family: sans-serif;
+}
+
+#form {
+    background-color: white;
+
+    width: 100%;
+
+    margin: auto;
+}
+
+#calendar-table {
+    width: 100%;
+
+    height: 40em;
+}
+
+#calendar-links, #form-links {
+    width: 100%;
+
+    background-color: white;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.calendar-link, .form-link {
+    font-size: 25px;
+    text-decoration: none;
+
+    width: 100%;
+    margin: auto;
+
+    color: black;
+
+    padding-left: 10px;
+}
+
+.calendar-link:hover, .form-link:hover {
+    text-decoration: underline;
+}
+
+.calendar-title {
+    text-align: center;
+    
+    font-size: 25px;
+
+    background-color: white;
+    
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    width: 25%;
+
+    margin: auto;
+}
+
+.day-window-title {
+    text-align: center;
+
+    position: relative;
+
+    top: -25px;
+}
+
+.day-window, .day-window-today {
+    background-color: white;
+
+    width: 10em;
+
+    height: 8em;
+}
+
+.day-window-today {
+    border: 1px solid black;
+}
+
+.change-date-left, .change-date-right {
+    text-decoration: none;
+
+    color: black;
+
+    font-size: 25px;
+}
+
+.change-date-left:hover, .change-date-right:hover {
+    text-decoration: none;
+}
+
+.change-date-left {
+    position: relative;
+    left: -20%;
+}
+
+.change-date-right {
+    position: relative;
+
+    left: 20%;
+}
