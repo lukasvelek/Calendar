@@ -21,5 +21,5 @@ All code is mine, except for parts where the author is mentioned.
 ## Statistics
 Time taken (roughly): 3 hours
 ### Lines of code: (Except for git files and md files)
-- 1237 (2022/8/17)
+- 1421 (2022/8/17) (+551)
 - 870 (2022/8/16)

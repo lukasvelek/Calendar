@@ -54,11 +54,47 @@ class Calendar {
                     <a class="event-link" href="index.php">Go back</a>
                     <a class="event-link" href="event-edit-form.php?id=' . $id . '">Edit</a>
                     <a class="event-link" href="event-delete.php?id=' . $id . '">Delete</a>
+                    <a class="event-link" href="event-export-json.php?id=' . $id .  '">Export as JSON</a>
                 ';
 
                 echo($content);
             }
         }
+    }
+
+    function createDayView($y, $m, $d) {
+        $meta_date = mktime(0, 0, 0, $m, $d, $y);
+        $date_db = date('Y-m-d H:i:s', $meta_date);
+        $date = date("l - F jS Y", $meta_date);
+
+        $total_content = "";
+        $content = "";
+
+        $total_content = '
+            <h2 class="day-title">' . $date . '</h2>';
+
+        $sql = "SELECT * FROM `calendar_entries`
+                WHERE `date` LIKE '$date_db'";
+
+        $res = $this->db->query($sql);
+
+        $x = $this->db->get_num_rows($sql);
+
+        $total_content = $total_content . '<p class="day-data">Events: ' . $x . '</p>';
+
+        if($x >= 1) {
+            foreach($res as $r) {
+                $id = $r['id'];
+                $title = $r['title'];
+
+                $content = '<a class="day-link" href="event.php?id=' . $id . '">' . $title . '</a><br>';
+                $total_content = $total_content . $content;
+            }
+        }
+
+        $total_content = $total_content . '<br><br><br><a class="day-link" href="index.php">Go back</a>';
+
+        echo($total_content);
     }
 
     /**
@@ -101,10 +137,10 @@ class Calendar {
 
         if($day == date('d') && $month == date('m') && $year == date('Y')) {
             $class = "day-window-today";
-            $title = '<p class="day-window-title"><b>' . $day . '</b></p>';
+            $title = '<a class="day-window-title" href="day-view.php?y=' . $year . '&m=' . $month . '&d=' . $day . '">' . $day . '</a>';
         } else {
             $class = "day-window";
-            $title = '<p class="day-window-title">' . $day . '</p>';
+            $title = '<a class="day-window-title" href="day-view.php?y=' . $year . '&m=' . $month . '&d=' . $day . '">' . $day . '</a>';
         }
         
         $window = '<td class="' . $class . '">' . $title . '' . $total_content . '</td>';
@@ -185,50 +221,6 @@ class Calendar {
     }
 
     /**
-     * Returns today's date
-     */
-    function getTodayDate() {
-        return $this->today_date;
-    }
-
-    /**
-     * Returns today's date in a prettier form
-     */
-    function getTodayDateFormatted() {
-        return $this->getCurrentMonthName() . " " . date("Y");
-    }
-
-    /**
-     * Returns entered date in a prettier form
-     */
-    function getDateFormatted($month, $year) {
-        return $this->getMonthName($month) . " " . $year;
-    }
-
-    /**
-     * Returns name of entered month
-     */
-    function getMonthName($month) {
-        $meta_date = mktime(0, 0, 0, $month, 1, 2020);
-
-        return date('F', $meta_date);
-    }
-
-    /**
-     * Returns name of the current month
-     */
-    function getCurrentMonthName() {
-        return date("F");
-    }
-
-    /**
-     * Returns name of the current day
-     */
-    function getTodayDayName() {
-        return date("l");
-    }
-
-    /**
      * Returns name of the day in a week
      */
     function getDayName($num) {
@@ -267,6 +259,89 @@ class Calendar {
         }
 
         return $text_color;
+    }
+
+    /**
+     * Returns a JSON export of entry with given id
+     */
+    function exportEntryAsJson($id) {
+        $json = "";
+
+        $sql = "SELECT * FROM `calendar_entries`
+                WHERE `id` LIKE '$id'";
+
+        $data = $this->db->query($sql);
+
+        if($this->db->get_num_rows($sql) == 1) {
+            foreach($data as $d) {
+                $title = $d['title'];
+                $description = $d['description'];
+                $date = $d['date'];
+                $location = $d['location'];
+                $color = $d['color'];
+
+                $json = '
+                {
+                    "title": "' . $title . '",
+                    "date": "' . $date . '",
+                    "description": "' . $description . '",
+                    "location": "' . $location . '",
+                    "color": "' . $color . '"
+                }';
+            }
+        }
+
+        return $json;
+    }
+
+    /**
+     * Returns a JSON export of entries for selected day. If there's no event -> no event will be given and therefore only day info will be returned.
+     */
+    function exportDayAsJson($day, $month, $year) {
+        $meta_date = mktime(0, 0, 0, $month, $day, $year);
+        $date_db = date("Y-m-d H:i:s", $meta_date);
+        $date = date("Y-m-d", $meta_date);
+
+        $json = '
+        {
+            "date": "' . $date . '",';
+
+        $sql = "SELECT `id` FROM `calendar_entries`
+                WHERE `date` LIKE '$date_db'";
+
+        $data = $this->db->query($sql);
+
+        $x = $this->db->get_num_rows($sql);
+
+        if($x > 0) {
+            $json = $json . '"events": [';
+        }
+
+        if($x == 1) {
+            foreach($data as $d) {
+                $json = $json . $this->exportEntryAsJson($d['id']);
+            }
+
+            $json = $json . ']';
+        } else if($x > 1) {
+            $z = 1;
+
+            foreach($data as $d) {
+                if(($z + 1) == $x) {
+                    $json = $json . $this->exportEntryAsJson($d['id']);
+                } else {
+                    $json = $json . $this->exportEntryAsJson($d['id']) . ',';
+                }
+
+                $z++;
+            }
+
+            $json = $json . ']';
+        }
+
+        $json = $json . ', "event_count": "' . $x . '"}';
+
+        return $json;
     }
 
     // DESIGN STUFF
@@ -344,6 +419,50 @@ class Calendar {
         $l = (int)round(255.0 * $l);
 
         return (object) Array('hue' => $h, 'saturation' => $s, 'lightness' => $l);
+    }
+
+    /**
+     * Returns today's date
+     */
+    function getTodayDate() {
+        return $this->today_date;
+    }
+
+    /**
+     * Returns today's date in a prettier form
+     */
+    function getTodayDateFormatted() {
+        return $this->getCurrentMonthName() . " " . date("Y");
+    }
+
+    /**
+     * Returns entered date in a prettier form
+     */
+    function getDateFormatted($month, $year) {
+        return $this->getMonthName($month) . " " . $year;
+    }
+
+    /**
+     * Returns name of entered month
+     */
+    function getMonthName($month) {
+        $meta_date = mktime(0, 0, 0, $month, 1, 2020);
+
+        return date('F', $meta_date);
+    }
+
+    /**
+     * Returns name of the current month
+     */
+    function getCurrentMonthName() {
+        return date("F");
+    }
+
+    /**
+     * Returns name of the current day
+     */
+    function getTodayDayName() {
+        return date("l");
     }
 }
 

@@ -42,7 +42,9 @@ $utils = new Utils();
 
                         if($m == 1) {
                             $before = "?m=12&y=" . ($y - 1);
+                            $next = "?m=" . ($m + 1) . "&y=" . $y;
                         } else if($m == 12) {
+                            $before = "?m=" . ($m - 1) . "&y=" . $y;
                             $next = "?m=01&y=" . ($y + 1);
                         } else {
                             if($m > 10) {
@@ -90,6 +92,7 @@ $utils = new Utils();
 
                 <div id="calendar-links">
                     <a class="calendar-link" href="new-event-form.php">New event</a>
+                    <a class="calendar-link" href="?">Today</a>
                 </div>
             </div>
         </div>
