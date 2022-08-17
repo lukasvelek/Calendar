@@ -6,12 +6,16 @@ body {
     overflow-x: hidden;
 }
 
-#form, footer {
+#form, #event, footer {
     background-color: white;
 
     width: 100%;
 
     margin: auto;
+}
+
+#event {
+    padding: 10px;
 }
 
 footer {
@@ -35,6 +39,22 @@ footer {
     padding-bottom: 10px;
 }
 
+#calendar-title-table {
+    width: 25%;
+
+    margin: auto;
+
+    background-color: white;
+}
+
+#calendar-title-table td {
+    text-align: center;
+}
+
+.calendar-title-table-text {
+    font-size: 25px;
+}
+
 .calendar-link, .form-link {
     font-size: 25px;
     text-decoration: none;
@@ -45,6 +65,12 @@ footer {
     color: black;
 
     padding-left: 10px;
+}
+
+.table-event-link {
+    color: black;
+
+    text-decoration: none;
 }
 
 .calendar-link:hover, .form-link:hover {
@@ -72,6 +98,14 @@ footer {
     position: relative;
 
     top: -25px;
+}
+
+.day-title {
+    background-color: white;
+
+    width: 10em;
+
+    height: 3em;
 }
 
 .day-window, .day-window-today {
@@ -107,4 +141,34 @@ footer {
     position: relative;
 
     left: 20%;
+}
+
+.event-title {
+    font-size: 30px;
+}
+
+.event-description {
+    color: grey;
+
+    font-size: 20px;
+}
+
+.event-data {
+    color: grey;
+
+    font-size: 17px;
+}
+
+.event-link {
+    color: black;
+
+    text-decoration: none;
+
+    font-size: 23px;
+
+    margin-right: 10px;
+}
+
+.event-link:hover {
+    text-decoration: underline;
 }

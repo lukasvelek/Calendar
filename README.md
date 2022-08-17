@@ -19,5 +19,7 @@ Utils (Utilities) contains functions that are used often within the whole app.
 All code is mine, except for parts where the author is mentioned.
 
 ## Statistics
-Lines of code: 870 (as of 2022/8/16, except for this README.md file)
 Time taken (roughly): 3 hours
+### Lines of code: (Except for git files and md files)
+- 1237 (2022/8/17)
+- 870 (2022/8/16)

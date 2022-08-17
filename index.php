@@ -22,60 +22,65 @@ $utils = new Utils();
     <body>
         <div id="wrapper">
             <div id="calendar">
-                <p class="calendar-title">
-                    <?php
-                    
-                    $m = 0;
-                    $y = 0;
+                <table id="calendar-title-table">
+                    <tr>
+                        <?php
 
-                    if(isset($_GET['m']) && isset($_GET['y'])) {
-                        $m = $utils->get("m");
-                        $y = $utils->get("y");
-                    } else {
-                        $m = date('m');
-                        $y = date('Y');
-                    }
+                        $m = 0;
+                        $y = 0;
 
-                    $before = "";
-                    $next = "";
-
-                    if($m == 1) {
-                        $before = "?m=12&y=" . ($y - 1);
-                    } else if($m == 12) {
-                        $next = "?m=01&y=" . ($y + 1);
-                    } else {
-                        if($m > 10) {
-                            $before = "?m=" . ($m - 1) . "&y=$y";
-                            $next = "?m=" . ($m + 1) . "&y=$y";
-                        } else if($m == 10) {
-                            $before = "?m=0" . ($m - 1) . "&y=$y";
-                            $next = "?m=" . ($m + 1) . "&y=$y";
-                        } else if($m == 9) {
-                            $before = "?m=0" . ($m - 1) . "&y=$y";
-                            $next = "?m=" . ($m + 1) . "&y=$y";
+                        if(isset($_GET['m']) && isset($_GET['y'])) {
+                            $m = $utils->get("m");
+                            $y = $utils->get("y");
                         } else {
-                            $before = "?m=0" . ($m - 1) . "&y=$y";
-                            $next = "?m=0" . ($m + 1) . "&y=$y";
+                            $m = date('m');
+                            $y = date('Y');
                         }
-                    }
 
-                    $before_link = '<a class="change-date-left" href="' . $before . '"><</a>';
-                    $next_link = '<a class="change-date-right" href="' . $next . '">></a>';
-                    
-                    echo($before_link);
+                        $before = "";
+                        $next = "";
 
-                    ?>
+                        if($m == 1) {
+                            $before = "?m=12&y=" . ($y - 1);
+                        } else if($m == 12) {
+                            $next = "?m=01&y=" . ($y + 1);
+                        } else {
+                            if($m > 10) {
+                                $before = "?m=" . ($m - 1) . "&y=$y";
+                                $next = "?m=" . ($m + 1) . "&y=$y";
+                            } else if($m == 10) {
+                                $before = "?m=0" . ($m - 1) . "&y=$y";
+                                $next = "?m=" . ($m + 1) . "&y=$y";
+                            } else if($m == 9) {
+                                $before = "?m=0" . ($m - 1) . "&y=$y";
+                                $next = "?m=" . ($m + 1) . "&y=$y";
+                            } else {
+                                $before = "?m=0" . ($m - 1) . "&y=$y";
+                                $next = "?m=0" . ($m + 1) . "&y=$y";
+                            }
+                        }
 
-                    <b><?php echo($cal->getDateFormatted($m, $y)); ?></b>
+                        $before_link = '<a class="change-date-left" href="' . $before . '"><</a>';
+                        $next_link = '<a class="change-date-right" href="' . $next . '">></a>';
 
-                    <?php
-                    
-                    echo($next_link);
-                    
-                    ?>
-                </p>
+                        ?>
+                        <td><b class="calendar-title-table-text"><?php echo($before_link); ?></b></td>
+                        <td><b class="calendar-title-table-text"><?php echo($cal->getDateFormatted($m, $y)); ?></b></td>
+                        <td><b class="calendar-title-table-text"><?php echo($next_link); ?></b></td>
+                    </tr>
+                </table>
 
                 <table id="calendar-table">
+                    <tr>
+                        <th class="day-title">Monday</th>
+                        <th class="day-title">Tuesday</th>
+                        <th class="day-title">Wednesday</th>
+                        <th class="day-title">Thursday</th>
+                        <th class="day-title">Friday</th>
+                        <th class="day-title">Saturday</th>
+                        <th class="day-title">Sunday</th>
+                    </tr>
+
                     <?php
                     
                     $cal->createCalendar($m, $y);
@@ -89,9 +94,4 @@ $utils = new Utils();
             </div>
         </div>
     </body>
-    <br>
-    <footer>
-        <p>Author: <b>Lukas Velek</b></p>
-        <p>GitHub project link: <b><a style="color: black; text-decoration: none" href="https://github.com/lukasvelek/Calendar">Calendar (GitHub)</a></b></p>
-    </footer>
 </html>

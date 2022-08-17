@@ -5,6 +5,8 @@
  * 
  * Author: Lukas Velek
  * Version: 2022/8/16
+ * 
+ * Revision 1: 2022/8/17
  */
 class Calendar {
     /**
@@ -19,6 +21,44 @@ class Calendar {
      */
     function __construct($db) {
         $this->db = $db;
+    }
+
+    /**
+     * Creates event overview with all saved data and also adds buttons
+     * for control - edit, delete and go back to the calendar
+     * 
+     * Function expects event (entry) id
+     */
+    function createEvent($id) {
+        $sql = "SELECT * FROM `calendar_entries`
+                WHERE `id` LIKE '$id'";
+
+        $event = $this->db->query($sql);
+
+        if($this->db->get_num_rows($sql) == 1) {
+            foreach($event as $e) {
+                $date = $e['date'];
+                $title = $e['title'];
+                $description = $e['description'];
+                $location = $e['location'];
+                $color = $e['color'];
+
+                $content = '
+                    <h2 class="event-title">' . $title . '</h2>
+                    <p class="event-description">Description: ' . $description . '</p>
+                    <p class="event-data">Location: ' . $location . '</p>
+                    <p class="event-data">Date: ' . $this->getFormattedDate($date) . '</p>
+                    <p class="event-data">Color: <input type="color" value="' . $color . '" disabled></p>
+                    <br>
+                    <br>
+                    <a class="event-link" href="index.php">Go back</a>
+                    <a class="event-link" href="event-edit-form.php?id=' . $id . '">Edit</a>
+                    <a class="event-link" href="event-delete.php?id=' . $id . '">Delete</a>
+                ';
+
+                echo($content);
+            }
+        }
     }
 
     /**
@@ -46,28 +86,49 @@ class Calendar {
         $content_res = $this->db->get_date_entries($date);
         
         foreach($content_res as $entry) {
-            $content = '<div style="background-color: ';
+            $id = $entry['id'];
+
+            $content = '<div style="text-align: center; background-color: ';
             $content_data = $entry['title'];
             $color = $entry['color'];
 
             $text_color = $this->get_text_light_dark($color);
 
-            $content = $content . $color . '; color: ' . $text_color . '">' . $content_data . '</div>';
+            $content = $content . $color . '"><a class="table-event-link" style="color: ' . $text_color . '" href="event.php?id=' . $id . '">' . $content_data . '</a></div>';
 
             $total_content = $total_content . $content;
         }
 
         if($day == date('d') && $month == date('m') && $year == date('Y')) {
             $class = "day-window-today";
-            $title = '<p class="day-window-title"><b>' . $day . ' ' . $day_name . '</b></p>';
+            $title = '<p class="day-window-title"><b>' . $day . '</b></p>';
         } else {
             $class = "day-window";
-            $title = '<p class="day-window-title">' . $day . ' ' . $day_name .  '</p>';
+            $title = '<p class="day-window-title">' . $day . '</p>';
         }
         
         $window = '<td class="' . $class . '">' . $title . '' . $total_content . '</td>';
 
         return $window;
+    }
+
+    function getDayNumberFromName($name) {
+        switch($name) {
+            case "Monday":
+                return 1;
+            case "Tuesday":
+                return 2;
+            case "Wednesday":
+                return 3;
+            case "Thursday":
+                return 4;
+            case "Friday":
+                return 5;
+            case "Saturday":
+                return 6;
+            case "Sunday":
+                return 7;
+        }
     }
 
     /**
@@ -78,18 +139,49 @@ class Calendar {
     function createCalendar($month, $year) {
         $days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
+        $d = 1;
+
         for($i = 1; $i <= $days_in_month; $i++) {
-            if($i == 1) {
+            if($d == 1) {
                 echo('<tr>');
+            }
+
+            $meta_date = mktime(0, 0, 0, $month, $i, $year);
+            $day_name = date("l", $meta_date);
+
+            $n = $this->GetDayNumberFromName($day_name);
+
+            if($i == 1 && $n != 1) {
+                $skip = $n - 1;
+
+                for($j = 1; $j <= $skip; $j++) {
+                    echo('<td></td>');
+
+                    $d++;
+                }
             }
             
             $dw = $this->createDayWindow($i, $month, $year);
             echo($dw);
-
-            if(($i % 7) == 0) {
+            
+            if(($d % 7) == 0) {
                 echo('</tr>');
             }
+
+            $d++;
         }
+    }
+
+    function getFormattedDate($date) {
+        $dt = explode(' ', $date)[0];
+
+        $y = explode('-', $dt)[0];
+        $m = explode('-', $dt)[1];
+        $d = explode('-', $dt)[2];
+
+        $meta_date = mktime(0, 0, 0, $m, $d, $y);
+
+        return date('F d Y', $meta_date);
     }
 
     /**
